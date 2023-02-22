@@ -4,4 +4,7 @@ public enum CacheMetadataEnum {
     ENTITYID,
     DBTABLE,
     UNIQUEID,
+    BUCKETNAME,
+    FILEEXTENSION,
+    TOPICNAME
 }

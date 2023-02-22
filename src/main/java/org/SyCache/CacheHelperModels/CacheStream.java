@@ -27,37 +27,53 @@ public class CacheStream implements CacheChannel {
         else func=null;
     }
 
-    private void hookNodeAndExecuteFunction(CacheChannelNodeStateHolder fetchNode)  {
+    public long getStatus(){
+        return this.nodeChangeFired.size();
+    }
+
+    private void installFixConfig(){
+        Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+    }
+
+    private void hookNodeAndExecuteFunction(CacheChannelNodeStateHolder cacheChannelNodeStateHolder)  {
             try {
-                String orgData = fetchNode.getNewNode().deserializeNode();
+                String orgData = cacheChannelNodeStateHolder.getNewNode().deserializeNode();
 
                 CacheChannelNodeStateHolder affectedNode = null;
                 if (isNodeSelfUpdate && cacheInlineFunction != null) {
 
-                    fetchNode.getNewNode().updateNode(String.valueOf(func.execute(orgData)));
+                    cacheChannelNodeStateHolder.getNewNode().updateNode(String.valueOf(func.execute(orgData)));
 
-                    affectedNode = fetchNode;
+                    affectedNode = cacheChannelNodeStateHolder;
                 } else if (cacheInlineFunction != null) {
-                    affectedNode=new CacheChannelNodeStateHolder(fetchNode.oldNode, new StringNode(fetchNode.getNewNode().getKey(), String.valueOf(func.execute(orgData))),fetchNode.getNodeStateEnum());
+                    affectedNode=new CacheChannelNodeStateHolder(cacheChannelNodeStateHolder.oldNode, new StringNode(cacheChannelNodeStateHolder.getNewNode().getKey(), String.valueOf(func.execute(orgData))),cacheChannelNodeStateHolder.getNodeStateEnum());
                 }
 
 
                 if (cacheOutputDriver != null) {
-                    cacheOutputDriver.setCacheChannelNodeStateHolder(affectedNode != null?affectedNode:fetchNode);
+                    cacheOutputDriver.setCacheChannelNodeStateHolder(affectedNode != null?affectedNode:cacheChannelNodeStateHolder);
                     cacheOutputDriver.broadcast();
                 }
 
             } catch (Exception exception) { // Continue To Working //
-                fetchNode.getNewNode().setLastNodeError(exception.getMessage());
+                System.out.println(exception.getMessage());
+                cacheChannelNodeStateHolder.getNewNode().setLastNodeError(exception.getMessage());
             }
     }
 
     public void runInsideOfPipelineThread() throws InterruptedException {
+        // Change Priority Of Stream To High //
+
+        installFixConfig();
+
         while (true) {
             CacheChannelNodeStateHolder fetchNode=nodeChangeFired.poll();
-            if(fetchNode != null)
+            if(fetchNode != null) {
                 hookNodeAndExecuteFunction(fetchNode);
-            else Thread.sleep(cacheStreamSleepTime);
+            }
+            else{
+                Thread.sleep(cacheStreamSleepTime);
+            }
         }
     }
 

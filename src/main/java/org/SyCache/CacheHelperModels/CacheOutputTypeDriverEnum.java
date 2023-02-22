@@ -4,5 +4,7 @@ public enum CacheOutputTypeDriverEnum {
     NONE,
     STDOUT,
     REDIS,
-    MYSQL
+    MYSQL,
+    S3,
+    KAFKA
 }

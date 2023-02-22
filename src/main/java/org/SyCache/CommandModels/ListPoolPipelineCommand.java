@@ -26,6 +26,8 @@ public class ListPoolPipelineCommand extends CacheCommand {
         for (CachePipeline cachePipeline:cache.getStorage().getPool(command.getPoolName()).getPoolPipeline()){
             StringNode node =new StringNode(String.join(",",cachePipeline.getMicros()),"Pipeline ID ["+cachePipeline.getPipelineId()+"] "+
                     "CommitState ["+cachePipeline.isCommitState()+"] Exception ["+cachePipeline.getException()+"]"
+                    +
+                    cachePipeline.getCacheStream()!= null?"Stream Remain Items ["+cachePipeline.getCacheStream().getStatus()+"]":""
                     );
 
             result.add(node);

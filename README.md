@@ -16,6 +16,10 @@
 
 {"headCommand":"set","poolName":"default","tailCommand":["test2","{\"id\":20}","","0","0","1000","ENTITYID=id,DBTABLE=test"]}
 
+{"headCommand":"set","poolName":"default","tailCommand":["test2","{\"id\":20}","","0","0","1000","FILEEXT=txt,BUCKETNAME=test"]}
+
+{"headCommand":"set","poolName":"default","tailCommand":["test2","{\"id\":20}","","0","0","1000","TOPICNAME=test"]}
+
 {"headCommand":"set","poolName":"default","tailCommand":["test2","20","","0","0","1000","DBTABLE=test"]}
 
 {"headCommand":"set","poolName":"default","tailCommand":["test2","test2","user-125","0","0","20","DBTABLE=test"]}
@@ -74,7 +78,15 @@
 
 {"headCommand":"pipeline-async","poolName":"default","tailCommand":["STM,default:,valueIncreaseByOne,false,true,STDOUT"]}
 
-{"headCommand":"pipeline-async","poolName":"default","tailCommand":["STM,default:,,false,true,MYSQL"]}
+{"headCommand":"pipeline-async","poolName":"default","tailCommand":["STM,default:,,false,false,MYSQL"]}
+
+{"headCommand":"pipeline-async","poolName":"default","tailCommand":["STM,default:,,false,false,S3"]}
+
+{"headCommand":"pipeline-async","poolName":"default","tailCommand":["STM,default:,,false,false,KAFKA"]}
+
+{"headCommand":"pipeline-async","poolName":"default","tailCommand":["STM,default:,,false,false,REDIS"]}
+
+{"headCommand":"pipeline-async","poolName":"default","tailCommand":["STM,default:,,false,false,STDOUT"]}
 
 {"headCommand":"pipeline-async","poolName":"default","tailCommand":["STM,default:(x)=>{y=JSON.parse(x);y.id+=1;return JSON.stringify(y);},,false,true,MYSQL"]}
 

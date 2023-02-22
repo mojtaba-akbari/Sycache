@@ -99,7 +99,7 @@ public abstract class Pool implements Iterable {
 
     protected void alertDelNodeToPoolChannel(Node node){
         for(CacheChannel cacheChannel:poolChannels)
-            cacheChannel.insertNode(node);
+            cacheChannel.destroyNode(node);
     }
 
 
